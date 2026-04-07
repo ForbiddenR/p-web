@@ -1,9 +1,7 @@
 <template>
-  <main class="app-shell"></main>
+  <SnChecker />
 </template>
 
-<style scoped>
-.app-shell {
-  min-height: calc(100vh - 4rem);
-}
-</style>
+<script setup>
+import SnChecker from './components/SnChecker.vue'
+</script>
