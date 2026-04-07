@@ -1,17 +1,9 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div class="app">
-    <HelloWorld msg="SN Online Status Checker" />
-  </div>
+  <main class="app-shell"></main>
 </template>
 
 <style scoped>
-.app {
-  display: flex;
-  justify-content: center;
+.app-shell {
+  min-height: calc(100vh - 4rem);
 }
 </style>
-
