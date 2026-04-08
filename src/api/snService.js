@@ -290,7 +290,7 @@ export async function closeConnection(sn) {
 
 /**
  * Get backend actuator health state.
- * @returns {Promise<{ healthy: boolean, status: string }>}
+ * @returns {Promise<{ healthy: boolean, httpStatus: number }>}
  */
 export async function getBackendHealth() {
   const res = await axios.get(HEALTH_PATH, {
@@ -298,10 +298,8 @@ export async function getBackendHealth() {
     validateStatus: () => true,
   })
 
-  const healthy = res.status === 200
-
   return {
-    healthy,
-    status: healthy ? 'UP' : `HTTP ${res.status}`,
+    healthy: res.status === 200,
+    httpStatus: res.status,
   }
 }

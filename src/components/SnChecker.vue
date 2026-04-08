@@ -72,7 +72,7 @@ const error = ref(null)
 const successMsg = ref(null)
 
 const backendHealthState = ref('checking') // 'checking' | 'up' | 'down'
-const backendHealthStatus = ref(null) // 'UP' | 'DOWN' | ...
+const backendHealthStatus = ref(null) // 'HTTP 200' | 'HTTP 503' | 'UNREACHABLE'
 const backendHealthError = ref(null)
 const backendLastCheckedAt = ref(null)
 
@@ -109,13 +109,19 @@ function showError(message) {
 
 const backendHealthText = computed(() => {
   if (backendHealthState.value === 'checking') return 'Checking...'
-  return backendHealthStatus.value || 'Unknown'
+  return backendHealthState.value === 'up' ? 'UP' : 'DOWN'
 })
 
 const backendHealthTitle = computed(() => {
-  if (backendHealthError.value) return backendHealthError.value
   if (backendHealthState.value === 'checking') return 'Polling /actuator/health'
-  return 'Polling /actuator/health'
+
+  const base = backendHealthStatus.value ? `/actuator/health: ${backendHealthStatus.value}` : 'Polling /actuator/health'
+
+  if (backendHealthError.value) {
+    return `${base} — ${backendHealthError.value}`
+  }
+
+  return base
 })
 
 const backendLastCheckedLabel = computed(() => {
@@ -129,7 +135,7 @@ async function refreshBackendHealth() {
 
     if (healthPollCancelled) return
 
-    backendHealthStatus.value = res.status
+    backendHealthStatus.value = `HTTP ${res.httpStatus}`
     backendHealthError.value = null
     backendHealthState.value = res.healthy ? 'up' : 'down'
   } catch (err) {
@@ -271,8 +277,7 @@ h2 {
   border-color: #b7eb8f;
 }
 
-.backend-health__badge.down,
-.backend-health__badge.error {
+.backend-health__badge.down {
   background: #fff2f0;
   color: #cf1322;
   border-color: #ffccc7;
