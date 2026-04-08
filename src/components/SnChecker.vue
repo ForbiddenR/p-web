@@ -61,7 +61,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { checkStatus, closeConnection, getAddress, getBackendHealth } from '../api/snService'
 
-const HEALTH_POLL_INTERVAL_MS = 5000
+const HEALTH_POLL_INTERVAL_MS = 60000
 
 const sn = ref('')
 const loading = ref(false)
