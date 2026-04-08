@@ -19,6 +19,10 @@ export default defineConfig(({ mode }) => {
           target: proxyTarget,
           changeOrigin: true,
         },
+        '/actuator': {
+          target: proxyTarget,
+          changeOrigin: true,
+        },
       },
     },
     resolve: {

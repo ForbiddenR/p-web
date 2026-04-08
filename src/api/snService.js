@@ -6,6 +6,8 @@ const API_PATHS = {
   close: '/close',
 }
 
+const HEALTH_PATH = '/actuator/health'
+
 const REQUEST_KEYS = {
   sn: 'sn',
 }
@@ -284,4 +286,22 @@ export async function getAddress(sn) {
 export async function closeConnection(sn) {
   const res = await http.post(API_PATHS.close, buildSnPayload(sn))
   return normalizeCloseResponse(res.data)
+}
+
+/**
+ * Get backend actuator health state.
+ * @returns {Promise<{ healthy: boolean, status: string }>}
+ */
+export async function getBackendHealth() {
+  const res = await axios.get(HEALTH_PATH, {
+    timeout: 5000,
+    validateStatus: () => true,
+  })
+
+  const healthy = res.status === 200
+
+  return {
+    healthy,
+    status: healthy ? 'UP' : `HTTP ${res.status}`,
+  }
 }
